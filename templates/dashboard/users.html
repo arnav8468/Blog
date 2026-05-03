@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Users Management - AI Blog{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto" data-aos="fade-up">
+    <h1 class="text-3xl font-bold mb-8">Users Management</h1>
+
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow overflow-hidden border border-gray-200 dark:border-gray-700">
+        <table class="w-full">
+            <thead class="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+                <tr>
+                    <th class="px-6 py-3 text-left text-gray-700 dark:text-gray-200 font-bold">Username</th>
+                    <th class="px-6 py-3 text-left text-gray-700 dark:text-gray-200 font-bold">Email</th>
+                    <th class="px-6 py-3 text-left text-gray-700 dark:text-gray-200 font-bold">Posts</th>
+                    <th class="px-6 py-3 text-left text-gray-700 dark:text-gray-200 font-bold">Joined</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                {% for user in users %}
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition border-b border-gray-200 dark:border-gray-700">
+                    <td class="px-6 py-4 text-gray-900 dark:text-gray-100">{{ user.username }}</td>
+                    <td class="px-6 py-4 text-gray-900 dark:text-gray-100">{{ user.email }}</td>
+                    <td class="px-6 py-4 text-gray-900 dark:text-gray-100">{{ user.post_count }}</td>
+                    <td class="px-6 py-4 text-gray-900 dark:text-gray-100">{{ user.date_joined|date:"M d, Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

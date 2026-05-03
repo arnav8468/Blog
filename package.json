@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.2.4",
+    "tailwindcss": "^4.2.4"
+  },
+  "devDependencies": {
+    "postcss": "^8.5.13"
+  },
+  "scripts": {
+    "build:css": "npx postcss static/css/style.css -o static/css/output.css"
+  }
+}

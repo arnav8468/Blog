@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% block title %}Home - AI Blog{% endblock %}
+{% block content %}
+<!-- Hero Section with Animated Dots -->
+<section class="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white py-24 rounded-3xl mb-16" data-aos="fade-up">
+    <div id="particles-container" class="absolute inset-0 overflow-hidden"></div>
+    <div class="absolute inset-0 bg-black opacity-20"></div>
+    <div class="relative container mx-auto px-4 text-center">
+        <h1 class="text-5xl md:text-7xl font-bold mb-6 animate-fade-in">AI-Powered Blogging</h1>
+        <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto animate-fade-in-delay">Create stunning content with the power of artificial intelligence</p>
+        {% if user.is_authenticated %}
+        <div class="flex gap-4 justify-center flex-wrap">
+            <a href="{% url 'posts:post_create' %}" class="bg-white text-indigo-600 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition inline-block animate-pulse-hover">Start Writing</a>
+            <a href="{% url 'ai:ai_generate' %}" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-full font-bold hover:shadow-lg transition inline-block animate-pulse-hover">AI Write</a>
+        </div>
+        {% else %}
+        <a href="{% url 'users:signup' %}" class="bg-white text-indigo-600 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition inline-block animate-pulse-hover">Get Started</a>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Floating Icons Section -->
+<section class="mb-16" data-aos="fade-up">
+    <div class="flex justify-center gap-12 md:gap-24 flex-wrap">
+        <div class="text-center animate-float-slow">
+            <div class="w-16 h-16 mx-auto bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center text-2xl">🤖</div>
+            <p class="mt-2 text-sm font-medium">AI Writing</p>
+        </div>
+        <div class="text-center animate-float-medium">
+            <div class="w-16 h-16 mx-auto bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center text-2xl">✨</div>
+            <p class="mt-2 text-sm font-medium">Smart Editing</p>
+        </div>
+        <div class="text-center animate-float-fast">
+            <div class="w-16 h-16 mx-auto bg-pink-100 dark:bg-pink-900 rounded-full flex items-center justify-center text-2xl">📊</div>
+            <p class="mt-2 text-sm font-medium">Analytics</p>
+        </div>
+        <div class="text-center animate-float-slow">
+            <div class="w-16 h-16 mx-auto bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center text-2xl">🎯</div>
+            <p class="mt-2 text-sm font-medium">SEO Optimized</p>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Posts Carousel -->
+{% if featured %}
+<section class="mb-16" data-aos="fade-up">
+    <h2 class="text-3xl font-bold mb-8">Featured Posts</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+        {% for post in featured %}
+        <a href="{% url 'posts:post_detail' post.slug %}" class="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition hover:-translate-y-1 duration-300">
+            <div class="p-6">
+                <h3 class="text-xl font-bold mb-2 group-hover:text-indigo-600 transition">{{ post.title }}</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">{{ post.created_at|date:"M d, Y" }} · {{ post.reading_time }} min read</p>
+                <span class="text-indigo-600 font-medium">Read More →</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Search & Filter -->
+<section class="mb-8" data-aos="fade-up">
+    <form method="get" class="flex flex-col md:flex-row gap-4">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search posts..." class="flex-grow px-4 py-3 rounded-xl border dark:bg-gray-800 dark:border-gray-600">
+        <select name="category" class="px-4 py-3 rounded-xl border dark:bg-gray-800 dark:border-gray-600">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+            <option value="{{ cat.slug }}" {% if category_slug == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition">Search</button>
+    </form>
+</section>
+
+<!-- Blog Grid -->
+<section data-aos="fade-up">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for post in page_obj %}
+        <article class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition group hover:-translate-y-1 duration-300" style="animation: fadeInUp 0.6s ease-out {{ forloop.counter0|add:"1" }}00ms both;">
+            <div class="p-6">
+                <div class="flex items-center gap-2 mb-3">
+                    {% if post.is_ai_generated %}
+                    <span class="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs px-2 py-1 rounded border border-purple-200 dark:border-purple-700">AI Generated</span>
+                    {% endif %}
+                    <span class="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 text-xs px-2 py-1 rounded border border-indigo-200 dark:border-indigo-700">{{ post.category.name|default:"Uncategorized" }}</span>
+                    <span class="text-gray-500 text-sm">{{ post.reading_time }} min read</span>
+                </div>
+                <h3 class="text-xl font-bold mb-2 group-hover:text-indigo-600 transition">
+                    <a href="{% url 'posts:post_detail' post.slug %}">{{ post.title }}</a>
+                </h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">{{ post.created_at|date:"M d, Y" }} by {{ post.author.username }}</p>
+                <div class="flex flex-wrap gap-1">
+                    {% for tag in post.tags.all %}
+                    <span class="bg-gray-100 dark:bg-gray-700 text-xs px-2 py-1 rounded">#{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                <div class="flex items-center gap-4 mt-4 text-sm text-gray-500">
+                    <span>❤️ {{ post.likes.count }}</span>
+                    <span>🔖 {{ post.bookmarks.count }}</span>
+                </div>
+            </div>
+        </article>
+        {% empty %}
+        <div class="col-span-3 text-center py-16 text-gray-500">
+            No posts found. {% if user.is_authenticated %}<a href="{% url 'posts:post_create' %}" class="text-indigo-600">Create the first one</a>{% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="flex justify-center mt-12 gap-2">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 shadow hover:shadow-lg transition">Previous</a>
+        {% endif %}
+        <span class="px-4 py-2 rounded-lg bg-indigo-600 text-white">{{ page_obj.number }}</span>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}" class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 shadow hover:shadow-lg transition">Next</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+
+<style>
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse-slow {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+.animate-fade-in {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.animate-fade-in-delay {
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.animate-pulse-hover {
+    animation: pulse-slow 2s ease-in-out infinite;
+}
+
+.animate-pulse-hover:hover {
+    animation-play-state: paused;
+}
+
+.animate-float-slow {
+    animation: float 4s ease-in-out infinite;
+}
+
+.animate-float-medium {
+    animation: float 3s ease-in-out infinite;
+    animation-delay: 0.5s;
+}
+
+.animate-float-fast {
+    animation: float 2.5s ease-in-out infinite;
+    animation-delay: 1s;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    animation: particle-float linear infinite;
+}
+
+@keyframes particle-float {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+.card-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 3s infinite;
+}
+</style>
+
+<script>
+function createParticles() {
+    const container = document.getElementById('particles-container');
+    if (!container) return;
+    
+    const particleCount = 50;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        const size = Math.random() * 6 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+        particle.style.animationDelay = `${Math.random() * 10}s`;
+        particle.style.opacity = Math.random() * 0.5 + 0.2;
+        
+        container.appendChild(particle);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', createParticles);
+</script>
+{% endblock %}

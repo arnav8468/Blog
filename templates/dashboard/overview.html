@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - AI Blog{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto" data-aos="fade-up">
+    <h1 class="text-3xl font-bold mb-8">Dashboard Overview</h1>
+
+    <!-- Stats Cards -->
+    <div class="grid md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+            <h3 class="text-gray-500 text-sm mb-2">Total Posts</h3>
+            <p class="text-4xl font-bold text-indigo-600">{{ total_posts }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+            <h3 class="text-gray-500 text-sm mb-2">Total Users</h3>
+            <p class="text-4xl font-bold text-purple-600">{{ total_users }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+            <h3 class="text-gray-500 text-sm mb-2">Categories</h3>
+            <p class="text-4xl font-bold text-pink-600">{{ total_categories }}</p>
+        </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6 mb-8">
+        <h2 class="text-xl font-bold mb-4">Posts This Week</h2>
+        <canvas id="postsChart" height="100"></canvas>
+    </div>
+
+    <!-- Recent Posts -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+        <h2 class="text-xl font-bold mb-4">Recent Posts</h2>
+        <div class="space-y-2">
+            {% for post in recent_posts %}
+            <a href="{% url 'posts:post_detail' post.slug %}" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+                {{ post.title }} - <span class="text-sm text-gray-500">{{ post.created_at|date:"M d, Y" }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+const ctx = document.getElementById('postsChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ posts_by_day|safe|default:"[]" }}.map(d => d.date),
+        datasets: [{
+            label: 'Posts Created',
+            data: {{ posts_by_day|safe|default:"[]" }}.map(d => d.count),
+            borderColor: 'rgb(79, 70, 229)',
+            tension: 0.1
+        }]
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}

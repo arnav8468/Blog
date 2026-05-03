@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}AI Content Generator - AI Blog{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto" data-aos="fade-up">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+        <h1 class="text-3xl font-bold mb-2">AI Content Generator</h1>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">Enter a title and keywords to generate a blog post with AI</p>
+        
+        <form method="post" id="ai-form" class="space-y-4 mb-8">
+            {% csrf_token %}
+            <div>
+                <label class="block text-sm font-medium mb-2">Blog Title</label>
+                <input type="text" name="title" id="title-input" class="w-full px-4 py-2 rounded border dark:bg-gray-700 dark:border-gray-600" placeholder="e.g., The Future of AI in Healthcare" required>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2">Keywords (comma-separated)</label>
+                <input type="text" name="keywords" id="keywords-input" class="w-full px-4 py-2 rounded border dark:bg-gray-700 dark:border-gray-600" placeholder="AI, healthcare, technology, innovation">
+            </div>
+            <button type="submit" id="generate-btn" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:shadow-lg transition flex items-center gap-2">
+                <span id="btn-text">Generate Content</span>
+                <svg id="btn-spinner" class="animate-spin h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </button>
+        </form>
+
+        {% if content %}
+        <div class="mt-8 p-6 bg-gray-50 dark:bg-gray-700 rounded-xl" id="generated-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Generated Content:</h3>
+                <button onclick="copyContent()" class="text-sm bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition">Copy to Clipboard</button>
+            </div>
+            <div class="prose dark:prose-invert max-w-none">{{ content|safe }}</div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<script>
+const form = document.getElementById('ai-form');
+const btn = document.getElementById('generate-btn');
+const spinner = document.getElementById('btn-spinner');
+const btnText = document.getElementById('btn-text');
+
+form?.addEventListener('submit', function() {
+    btn.disabled = true;
+    spinner.classList.remove('hidden');
+    btnText.textContent = 'Generating...';
+});
+
+function copyContent() {
+    const content = document.getElementById('generated-content').innerText;
+    navigator.clipboard.writeText(content);
+    alert('Content copied to clipboard!');
+}
+</script>
+{% endblock %}

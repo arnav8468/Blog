@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Profile - AI Blog{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto mt-8" data-aos="fade-up">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+        <div class="flex items-center gap-6 mb-8">
+            {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" class="w-24 h-24 rounded-full object-cover border-4 border-indigo-600">
+            {% else %}
+            <div class="w-24 h-24 rounded-full bg-indigo-600 flex items-center justify-center text-white text-3xl">
+                {{ user.username.0|upper }}
+            </div>
+            {% endif %}
+            <div>
+                <h1 class="text-3xl font-bold">{{ user.username }}</h1>
+                <p class="text-gray-600 dark:text-gray-400">{{ user.email }}</p>
+            </div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+            <div>
+                <label class="block text-sm font-medium mb-1">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <p class="text-red-500 text-sm">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">Update Profile</button>
+        </form>
+
+        <div class="mt-8">
+            <h2 class="text-xl font-bold mb-4">My Posts</h2>
+            <div class="space-y-2">
+                {% for post in user.posts.all %}
+                <a href="{% url 'posts:post_detail' post.slug %}" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+                    {{ post.title }}
+                </a>
+                {% empty %}
+                <p class="text-gray-500">No posts yet. <a href="{% url 'posts:post_create' %}" class="text-indigo-600">Create one</a></p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

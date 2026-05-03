@@ -1,0 +1,77 @@
+# base admin styles
+
+div#container {
+    border: none !important;
+}
+
+#header {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white !important;
+}
+
+#header #branding h1 {
+    color: white !important;
+}
+
+#header a:link, #header a:visited {
+    color: white !important;
+}
+
+.module caption {
+    background: #4f46e5 !important;
+    color: white !important;
+    font-weight: bold !important;
+}
+
+table thead th {
+    color: #1f2937 !important;
+    background-color: #f3f4f6 !important;
+    border-bottom: 2px solid #d1d5db !important;
+}
+
+table tbody td {
+    color: #111827 !important;
+    border-bottom: 1px solid #e5e7eb !important;
+}
+
+table {
+    border: 1px solid #d1d5db !important;
+}
+
+#content-main table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.submit-row input.default {
+    background: #4f46e5 !important;
+}
+
+a:link, a:visited {
+    color: #4f46e5 !important;
+}
+
+fieldset {
+    border: 1px solid #d1d5db !important;
+}
+
+fieldset legend {
+    color: #1f2937 !important;
+    font-weight: bold !important;
+}
+
+input[type="text"], input[type="password"], input[type="email"], textarea, select {
+    border: 1px solid #d1d5db !important;
+    color: #111827 !important;
+    background-color: white !important;
+}
+
+label {
+    color: #1f2937 !important;
+    font-weight: 500 !important;
+}
+
+.breadcrumbs {
+    background: #f9fafb !important;
+    color: #374151 !important;
+}

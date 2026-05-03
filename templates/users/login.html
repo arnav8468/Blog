@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Login - AI Blog{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto mt-16" data-aos="fade-up">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+        <h1 class="text-3xl font-bold mb-6 text-center">Welcome Back</h1>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label class="block text-sm font-medium mb-1">Username</label>
+                <input type="text" name="username" class="w-full px-4 py-2 rounded border dark:bg-gray-700 dark:border-gray-600" required>
+            </div>
+            <div class="relative">
+                <label class="block text-sm font-medium mb-1">Password</label>
+                <input type="password" id="login-password" name="password" class="w-full px-4 py-2 rounded border dark:bg-gray-700 dark:border-gray-600" required>
+                <button type="button" onclick="togglePassword('login-password', this)" class="absolute right-3 top-9 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                </button>
+            </div>
+            <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition">Login</button>
+        </form>
+        <p class="text-center mt-4 text-gray-600 dark:text-gray-400">
+            Don't have an account? <a href="{% url 'users:signup' %}" class="text-indigo-600">Sign Up</a>
+        </p>
+        <p class="text-center mt-2">
+            <a href="{% url 'users:password_reset' %}" class="text-sm text-gray-500">Forgot password?</a>
+        </p>
+    </div>
+</div>
+<script>
+function togglePassword(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const type = input.type === 'password' ? 'text' : 'password';
+    input.type = type;
+    btn.querySelector('svg').innerHTML = type === 'password'
+        ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>'
+        : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L6.59 6.59m7.532 7.532l3.29 3.29M3 3l18 18"/>';
+}
+</script>
+{% endblock %}

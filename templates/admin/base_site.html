@@ -1,0 +1,11 @@
+{% extends "admin/base.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">AI Blog Admin</a></h1>
+{% endblock %}
