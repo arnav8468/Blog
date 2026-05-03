@@ -22,9 +22,9 @@ def get_env(key, default=None):
     return value if value is not None else default
 
 SECRET_KEY = get_env('SECRET_KEY', 'django-insecure-ai-blog-secret-key-1234567890')
-DEBUG = get_env('DEBUG', 'True') == 'True'
+DEBUG = get_env('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']  # Allow all hosts for Vercel deployment
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -73,6 +74,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ai_blog.wsgi.application'
 
+# Database configuration - use SQLite for development, PostgreSQL for production
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -80,14 +82,24 @@ DATABASES = {
     }
 }
 
+# Check if using PostgreSQL (for Vercel Postgres)
+db_url = get_env('DATABASE_URL')
+if db_url:
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.parse(db_url, conn_max_age=600)
+
 AUTH_USER_MODEL = 'users.CustomUser'
 CRISPY_TEMPLATE_PACK = "tailwind"
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# For Vercel - disable session persistence issues
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
 CKEDITOR_UPLOAD_PATH = 'uploads/'
 CKEDITOR_CONFIGS = {
